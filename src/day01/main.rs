@@ -1,8 +1,9 @@
+use std::collections::HashMap;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::path::Path;
 
-fn get_distances(a: Vec<u32>, b: Vec<u32>) -> Vec<u32> {
+fn get_distances(a: &Vec<u32>, b: &Vec<u32>) -> Vec<u32> {
     if a.len() != b.len() {
         panic!("The two vectors must have the same length");
     }
@@ -18,6 +19,28 @@ fn get_distances(a: Vec<u32>, b: Vec<u32>) -> Vec<u32> {
     }
 
     distances
+}
+
+fn get_similarity(a: &Vec<u32>, b: &Vec<u32>) -> u32 {
+    let mut freq_map = HashMap::new();
+    let mut frequency: u32 = 0;
+
+    for i in b.iter() {
+        if !freq_map.contains_key(i) {
+            freq_map.insert(i, 1);
+        } else {
+            freq_map.insert(i, freq_map.get(i).unwrap() + 1);
+        }
+    }
+
+    for i in a.iter() {
+        match freq_map.get(i) {
+            Some(v) => frequency += i * v,
+            None => (),
+        }
+    }
+
+    frequency
 }
 
 fn main() {
@@ -42,19 +65,22 @@ fn main() {
         }
     }
 
-    let result: u32 = get_distances(a, b).iter().sum();
-    println!("{}", result);
+    println!(
+        "Part 1 answer: {}",
+        get_distances(&a, &b).iter().sum::<u32>()
+    );
+    println!("Part 2 answer: {}", get_similarity(&a, &b));
 }
 
 #[cfg(test)]
-mod tests {
+mod part1_tests {
     use super::*;
 
     #[test]
     fn example() {
         let a = vec![3, 4, 2, 1, 3, 3];
         let b = vec![4, 3, 5, 3, 9, 3];
-        let distances = get_distances(a, b);
+        let distances = get_distances(&a, &b);
         let sum: u32 = distances.iter().sum();
         assert_eq!(sum, 11);
     }
@@ -63,7 +89,7 @@ mod tests {
     fn empty() {
         let a = vec![];
         let b = vec![];
-        let distances = get_distances(a, b);
+        let distances = get_distances(&a, &b);
         let sum: u32 = distances.iter().sum();
         assert_eq!(sum, 0);
     }
@@ -73,6 +99,19 @@ mod tests {
     fn different_lengths() {
         let a = vec![1, 2, 3];
         let b = vec![1, 2];
-        get_distances(a, b);
+        get_distances(&a, &b);
+    }
+}
+
+#[cfg(test)]
+mod part2_tests {
+    use super::*;
+
+    #[test]
+    fn example() {
+        let a = vec![3, 4, 2, 1, 3, 3];
+        let b = vec![4, 3, 5, 3, 9, 3];
+        let similarity = get_similarity(&a, &b);
+        assert_eq!(similarity, 31);
     }
 }
