@@ -29,3 +29,8 @@ node_modules/
 
 # Personal input files (often provided by Advent of Code)
 **/input.txt
+
+
+# Added by cargo
+
+/target
