@@ -52,7 +52,7 @@ Use the checklist below to track your daily challenges:
 <details>
 <summary>My progress so far...</summary>
 
-- [ x ] Day 1
+- [ ] Day 1
 - [ ] Day 2
 - [ ] Day 3
 - [ ] Day 4
