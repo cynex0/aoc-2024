@@ -1,3 +1,7 @@
+use std::fs::File;
+use std::io::{BufRead, BufReader};
+use std::path::Path;
+
 fn get_distances(a: Vec<u32>, b: Vec<u32>) -> Vec<u32> {
     if a.len() != b.len() {
         panic!("The two vectors must have the same length");
@@ -16,7 +20,31 @@ fn get_distances(a: Vec<u32>, b: Vec<u32>) -> Vec<u32> {
     distances
 }
 
-fn main() {}
+fn main() {
+    let path = Path::new("input");
+
+    let file = match File::open(&path) {
+        Ok(file) => file,
+        Err(error) => panic!("Error opening file: {}", error),
+    };
+
+    let mut a: Vec<u32> = Vec::new();
+    let mut b: Vec<u32> = Vec::new();
+
+    let lines = BufReader::new(file).lines();
+    for line in lines.flatten() {
+        for (i, number) in line.split_whitespace().enumerate() {
+            match i {
+                0 => a.push(number.parse().unwrap()),
+                1 => b.push(number.parse().unwrap()),
+                _ => panic!("Too many numbers in line"),
+            }
+        }
+    }
+
+    let result: u32 = get_distances(a, b).iter().sum();
+    println!("{}", result);
+}
 
 #[cfg(test)]
 mod tests {
