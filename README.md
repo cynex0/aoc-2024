@@ -38,14 +38,14 @@ aoc/
 
 - **Programming Language**: Rust
 - **Year**: 2024
-- **Total Stars Collected**: 2
+- **Total Stars Collected**: 4
 
 ## 🔗 Useful Resources
 
 - [Official Advent of Code Website](https://adventofcode.com/)
 - [Advent of Code Reddit Community](https://www.reddit.com/r/adventofcode/)
 
-## 🏆 Tracking Progress (TODO)
+## 🏆 Tracking Progress
 
 Use the checklist below to track your daily challenges:
 
@@ -53,7 +53,7 @@ Use the checklist below to track your daily challenges:
 <summary>My progress so far...</summary>
 
 - [x] Day 1
-- [ ] Day 2
+- [x] Day 2
 - [ ] Day 3
 - [ ] Day 4
 - [ ] Day 5
@@ -79,6 +79,5 @@ Use the checklist below to track your daily challenges:
 - [ ] Day 25
 
 </details>
-
 
 **Happy Coding! 🖥️🎄**
