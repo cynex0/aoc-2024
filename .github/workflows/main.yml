@@ -1,5 +1,8 @@
 name: Update README with AoC Stars
 
+permissions:
+  contents: write  # Grant write permissions to the workflow
+  
 on:
   push:
     branches:
