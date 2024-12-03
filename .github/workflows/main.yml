@@ -1,3 +1,5 @@
+# yes, i am too lazy to manually update it
+# yes, i spent more time writing this than it would've taken me to update it manually every time
 name: Update README with AoC Stars
 
 permissions:
@@ -6,7 +8,9 @@ permissions:
 on:
   push:
     branches:
-      - main  # Adjust to your default branch if different
+      - main 
+    paths:
+      - src/**
   workflow_dispatch:  # Allows manual trigger
 
 jobs:
@@ -37,4 +41,4 @@ jobs:
       - name: Commit Changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Update README with latest AoC stars and progress"
+          commit_message: "Update README with latest AoC stars"
