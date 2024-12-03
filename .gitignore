@@ -34,3 +34,6 @@ node_modules/
 # Added by cargo
 
 /target
+
+# Leaderboard script
+leaderboard.json
