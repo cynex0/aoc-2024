@@ -38,7 +38,7 @@ aoc/
 
 - **Programming Language**: Rust
 - **Year**: 2024
-- **Total Stars Collected**: 4
+- **Total Stars Collected**: 6
 
 ## 🔗 Useful Resources
 
