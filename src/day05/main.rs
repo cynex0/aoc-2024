@@ -48,6 +48,21 @@ fn follows_rules(nums: &Vec<usize>, rules: &HashMap<usize, Vec<usize>>) -> bool 
     true
 }
 
+fn reorder(nums: &Vec<usize>, rules: &HashMap<usize, Vec<usize>>) -> Vec<usize> {
+    let mut res = vec![];
+    for num in nums {
+        if let Some(rule) = rules.get(&num) {
+            if let Some(insert_at) = res.iter().position(|x| rule.contains(x)) {
+                res.insert(insert_at, *num);
+            } else {
+                res.push(*num);
+            }
+        }
+    }
+
+    res
+}
+
 fn main() {
     let input: Vec<&str> = include_str!("input").split("\n\n").collect();
     if input.len() != 2 {
@@ -69,6 +84,8 @@ fn main() {
     }
 
     let mut sum = 0;
+    let mut sum_with_reorder = 0;
+
     for line in lines {
         let nums: Vec<usize> = line
             .split(',')
@@ -77,8 +94,12 @@ fn main() {
 
         if follows_rules(&nums, &rules_map) {
             sum += nums[nums.len() / 2];
+        } else {
+            let reordered = reorder(&nums, &rules_map);
+            sum_with_reorder += reordered[reordered.len() / 2];
         }
     }
 
     println!("Part 1 answer: {sum}");
+    println!("Part 2 answer: {sum_with_reorder}");
 }
