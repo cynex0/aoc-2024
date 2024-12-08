@@ -56,6 +56,48 @@ fn count_antinodes(map: &HashMap<char, Vec<(usize, usize)>>, rows: usize, cols: 
     antinodes.iter().count()
 }
 
+fn count_antinodes_with_harmonics(
+    map: &HashMap<char, Vec<(usize, usize)>>,
+    rows: usize,
+    cols: usize,
+) -> usize {
+    let mut antinodes: HashSet<(usize, usize)> = HashSet::new();
+
+    for k in map.keys() {
+        if let Some(poss) = map.get(&k) {
+            for (i, pos_i) in poss.iter().enumerate() {
+                for pos_j in poss.iter().skip(i + 1) {
+                    let (dy, dx): (i32, i32) = (
+                        pos_i.0 as i32 - pos_j.0 as i32,
+                        pos_i.1 as i32 - pos_j.1 as i32,
+                    );
+                    // starting at i, while in bounds, add to set and add diff
+                    let mut node_i = (pos_i.0 as i32, pos_i.1 as i32);
+                    loop {
+                        if !in_bounds(node_i, rows, cols) {
+                            break;
+                        }
+                        antinodes.insert((node_i.0 as usize, node_i.1 as usize));
+                        node_i = (node_i.0 + dy, node_i.1 + dx);
+                    }
+
+                    // starting at j, while in bounds, add to set and subtract diff
+                    let mut node_j = (pos_j.0 as i32, pos_j.1 as i32);
+                    loop {
+                        if !in_bounds(node_j, rows, cols) {
+                            break;
+                        }
+                        antinodes.insert((node_j.0 as usize, node_j.1 as usize));
+                        node_j = (node_j.0 - dy, node_j.1 - dx);
+                    }
+                }
+            }
+        }
+    }
+
+    antinodes.iter().count()
+}
+
 fn main() {
     let input = include_str!("input");
     let mut antennas: HashMap<char, Vec<(usize, usize)>> = HashMap::new();
@@ -77,6 +119,8 @@ fn main() {
     }
     let ans_1 = count_antinodes(&antennas, rows, cols);
     println!("Part 1 answer: {ans_1}");
+    let ans_2 = count_antinodes_with_harmonics(&antennas, rows, cols);
+    println!("Part 2 answer: {ans_2}");
 }
 
 #[cfg(test)]
@@ -145,7 +189,7 @@ mod tests {
     }
 
     #[test]
-    fn example() {
+    fn p1_example() {
         let input = "............\n\
                     ........0...\n\
                     .....0......\n\
@@ -163,6 +207,38 @@ mod tests {
         assert_eq!(
             14,
             count_antinodes(
+                &map,
+                input.lines().count(),
+                input.lines().map(|x| x.chars().count()).max().unwrap_or(0)
+            )
+        );
+        assert_eq!(
+            34,
+            count_antinodes_with_harmonics(
+                &map,
+                input.lines().count(),
+                input.lines().map(|x| x.chars().count()).max().unwrap_or(0)
+            )
+        );
+    }
+
+    #[test]
+    fn p2_example() {
+        let input = "T.........\n\
+                     ...T......\n\
+                     .T........\n\
+                     ..........\n\
+                     ..........\n\
+                     ..........\n\
+                     ..........\n\
+                     ..........\n\
+                     ..........\n\
+                     ..........";
+        let map = parse_input(input);
+
+        assert_eq!(
+            9,
+            count_antinodes_with_harmonics(
                 &map,
                 input.lines().count(),
                 input.lines().map(|x| x.chars().count()).max().unwrap_or(0)
