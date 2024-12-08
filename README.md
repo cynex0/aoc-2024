@@ -3,6 +3,13 @@
   <img src="aoc-header.png" alt="AoC header picture"/>
 </div>
 
+## 🌟 My Advent of Code Profile
+
+- **Programming Language**: Rust
+- **Year**: 2024
+- **Total Stars Collected**: 14
+
+
 ## 🎄 What is Advent of Code?
 
 Advent of Code is an annual programming challenge created by Eric Wastl. Each
@@ -32,52 +39,9 @@ aoc/
 └── .gitignore
 ```
 
-## 🌟 My Advent of Code Profile
-
-### Personal Information
-
-- **Programming Language**: Rust
-- **Year**: 2024
-- **Total Stars Collected**: 14
-
 ## 🔗 Useful Resources
 
 - [Official Advent of Code Website](https://adventofcode.com/)
 - [Advent of Code Reddit Community](https://www.reddit.com/r/adventofcode/)
-
-## 🏆 Tracking Progress
-
-Use the checklist below to track your daily challenges:
-
-<details>
-<summary>My progress so far...</summary>
-
-- [x] Day 1
-- [x] Day 2
-- [x] Day 3
-- [x] Day 4
-- [ ] Day 5
-- [ ] Day 6
-- [ ] Day 7
-- [ ] Day 8
-- [ ] Day 9
-- [ ] Day 10
-- [ ] Day 11
-- [ ] Day 12
-- [ ] Day 13
-- [ ] Day 14
-- [ ] Day 15
-- [ ] Day 16
-- [ ] Day 17
-- [ ] Day 18
-- [ ] Day 19
-- [ ] Day 20
-- [ ] Day 21
-- [ ] Day 22
-- [ ] Day 23
-- [ ] Day 24
-- [ ] Day 25
-
-</details>
 
 **Happy Coding! 🖥️🎄**
