@@ -7,7 +7,7 @@
 
 - **Programming Language**: Rust
 - **Year**: 2024
-- **Total Stars Collected**: 14
+- **Total Stars Collected**: 16
 
 
 ## 🎄 What is Advent of Code?
