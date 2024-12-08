@@ -46,9 +46,12 @@ fn move_guard(pos: &mut Position, map: &Vec<Vec<char>>, rows: usize, cols: usize
     let (dx, dy) = (pos.get_dir_vec().0, pos.get_dir_vec().1);
 
     if x > 0 && x < cols as i32 - 1 && y > 0 && y < rows as i32 - 1 {
-        let next = map[(y + dy) as usize][(x + dx) as usize];
-        if next == '#' {
+        let mut next = map[(y + dy) as usize][(x + dx) as usize];
+        // an (extremely rare) edgecase where multiple turns in one spot are possible
+        while next == '#' {
             pos.turn_right();
+            let (dx, dy) = (pos.get_dir_vec().0, pos.get_dir_vec().1);
+            next = map[(y + dy) as usize][(x + dx) as usize];
         }
     }
 
@@ -73,9 +76,6 @@ fn pathfind(map: &mut Vec<Vec<char>>, pos: &mut Position) -> HashSet<(usize, usi
     visited
 }
 
-// i tried everything i could, rewrote it all 3 times,
-// and my answer is off by a ridiculously small amount (counts 3 extra loops out of ~1800)
-// i dont have the willpower to debug those edgecases....
 fn detect_loop(mut map: Vec<Vec<char>>, mut pos: Position, obstacle: (usize, usize)) -> bool {
     let rows = map.len();
     let cols = map[0].len();
@@ -104,7 +104,7 @@ fn detect_loop(mut map: Vec<Vec<char>>, mut pos: Position, obstacle: (usize, usi
     // true
 }
 
-fn get_start_pos(map: &Vec<Vec<char>>) -> Position {
+fn get_start_pos(map: &mut Vec<Vec<char>>) -> Position {
     let mut pos = Position {
         x: (0),
         y: (0),
@@ -116,6 +116,7 @@ fn get_start_pos(map: &Vec<Vec<char>>) -> Position {
             if *c == '^' {
                 pos.x = j as i32;
                 pos.y = i as i32;
+                map[i][j] = '.';
                 break 'outer;
             }
         }
@@ -132,7 +133,7 @@ fn main() {
         .map(|x| x.chars().collect())
         .collect();
 
-    let start_pos = get_start_pos(&map);
+    let start_pos = get_start_pos(&mut map);
     let visited = pathfind(&mut map, &mut start_pos.clone());
     println!("Part 1 answer: {}", visited.iter().count());
     println!(
@@ -161,7 +162,7 @@ mod part1_tests {
     #[test]
     fn example() {
         let mut map: Vec<Vec<char>> = STR.lines().map(|x| x.chars().collect()).collect();
-        let start_pos = get_start_pos(&map);
+        let start_pos = get_start_pos(&mut map);
         let visited = pathfind(&mut map, &mut start_pos.clone());
         assert_eq!(41, visited.iter().count());
         assert_eq!(
@@ -171,5 +172,57 @@ mod part1_tests {
                 .filter(|pos| detect_loop(map.clone(), start_pos.clone(), **pos))
                 .count()
         );
+    }
+
+    #[test]
+    fn boundary_start() {
+        let boundary_str: &str = "..........#\n\
+                                  .........#.\n\
+                                  .........#.\n\
+                                  ........#..\n\
+                                  ^.......#..\n\
+                                  ...........\n\
+                                  ...........\n\
+                                  ...........\n\
+                                  ...........";
+        let mut map: Vec<Vec<char>> = boundary_str.lines().map(|x| x.chars().collect()).collect();
+        let start_pos = get_start_pos(&mut map);
+        let visited = pathfind(&mut map, &mut start_pos.clone());
+        assert_eq!(5, visited.iter().count());
+        assert_eq!(
+            0,
+            visited
+                .iter()
+                .filter(|pos| detect_loop(map.clone(), start_pos.clone(), **pos))
+                .count()
+        );
+    }
+
+    #[test]
+    fn loop_possible() {
+        let loop_str: &str = "#####\n\
+                              #...#\n\
+                              #.^.#\n\
+                              ....#\n\
+                              #.###";
+        let mut map: Vec<Vec<char>> = loop_str.lines().map(|x| x.chars().collect()).collect();
+        let start_pos = get_start_pos(&mut map);
+        let visited = pathfind(&mut map, &mut start_pos.clone());
+        assert_eq!(8, visited.iter().count());
+        assert!(detect_loop(map.clone(), start_pos.clone(), (0, 3)));
+    }
+
+    #[test]
+    fn close_obstacles() {
+        let loop_str: &str = "#####\n\
+                              #.#.#\n\
+                              #^..#\n\
+                              #...#\n\
+                              #.###";
+        let mut map: Vec<Vec<char>> = loop_str.lines().map(|x| x.chars().collect()).collect();
+        let start_pos = get_start_pos(&mut map);
+        let visited = pathfind(&mut map, &mut start_pos.clone());
+        assert_eq!(4, visited.iter().count());
+        // assert!(detect_loop(map.clone(), start_pos.clone(), (1, 4)));
     }
 }
