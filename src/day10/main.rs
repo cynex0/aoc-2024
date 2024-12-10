@@ -30,6 +30,37 @@ fn count_paths(map: &Vec<Vec<u32>>, start_pos: (usize, usize)) -> usize {
     let rows = map.len();
     let cols = map[0].len();
 
+    let mut stack: LinkedList<(usize, usize)> = LinkedList::new();
+    stack.push_back(start_pos);
+
+    while let Some(pos) = stack.pop_back() {
+        let curr = map[pos.0][pos.1];
+        if curr == 9 {
+            paths += 1;
+            continue;
+        }
+
+        for dir in get_valid_directions(pos, rows, cols).iter() {
+            let row = ((pos.0 as i32) + dir.0) as usize;
+            let col = ((pos.1 as i32) + dir.1) as usize;
+
+            if let Some(v) = map[row][col].checked_sub(curr) {
+                if v == 1 {
+                    stack.push_back((row, col));
+                }
+            }
+        }
+    }
+
+    paths
+}
+
+fn count_unique_paths(map: &Vec<Vec<u32>>, start_pos: (usize, usize)) -> usize {
+    // DFS
+    let mut paths = 0;
+    let rows = map.len();
+    let cols = map[0].len();
+
     let mut visited: HashSet<(usize, usize)> = HashSet::new();
     let mut stack: LinkedList<(usize, usize)> = LinkedList::new();
     stack.push_back(start_pos);
@@ -65,15 +96,18 @@ fn count_paths(map: &Vec<Vec<u32>>, start_pos: (usize, usize)) -> usize {
 fn main() {
     let input = include_str!("input");
     let map = parse_input(input);
-    let mut sum = 0;
+    let mut sum_1 = 0;
+    let mut sum_2 = 0;
     for (i, row) in map.iter().enumerate() {
         for (j, n) in row.iter().enumerate() {
             if *n == 0 {
-                sum += count_paths(&map, (i, j))
+                sum_1 += count_unique_paths(&map, (i, j));
+                sum_2 += count_paths(&map, (i, j));
             }
         }
     }
-    println!("Part 1 answer: {sum}");
+    println!("Part 1 answer: {sum_1}");
+    println!("Part 2 answer: {sum_2}");
 }
 
 #[cfg(test)]
