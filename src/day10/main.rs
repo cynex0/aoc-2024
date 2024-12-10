@@ -96,16 +96,21 @@ fn count_unique_paths(map: &Vec<Vec<u32>>, start_pos: (usize, usize)) -> usize {
 fn main() {
     let input = include_str!("input");
     let map = parse_input(input);
-    let mut sum_1 = 0;
-    let mut sum_2 = 0;
-    for (i, row) in map.iter().enumerate() {
-        for (j, n) in row.iter().enumerate() {
-            if *n == 0 {
-                sum_1 += count_unique_paths(&map, (i, j));
-                sum_2 += count_paths(&map, (i, j));
-            }
-        }
-    }
+    let (sum_1, sum_2): (usize, usize) = map
+        .iter()
+        .enumerate()
+        .flat_map(|(i, row)| {
+            row.iter()
+                .enumerate()
+                .filter(|(_, &n)| n == 0)
+                .map(move |(j, _)| (i, j))
+        })
+        .fold((0, 0), |(s1, s2), pos| {
+            (
+                s1 + count_unique_paths(&map, pos),
+                s2 + count_paths(&map, pos),
+            )
+        });
     println!("Part 1 answer: {sum_1}");
     println!("Part 2 answer: {sum_2}");
 }
